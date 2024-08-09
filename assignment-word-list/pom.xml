@@ -13,9 +13,15 @@
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
     <quarkus.platform.version>2.9.2.Final</quarkus.platform.version>
+    <quarkus.extension.processor.version>3.13.1</quarkus.extension.processor.version>
     <skipITs>true</skipITs>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
+    
+    <flyway.database.postgresql.version>10.17.0</flyway.database.postgresql.version>
+    <lombok.version>1.18.34</lombok.version>
   </properties>
+  
+  
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -27,6 +33,7 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+  
   <dependencies>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -58,6 +65,30 @@
     	<artifactId>quarkus-smallrye-openapi</artifactId>
     </dependency>
     
+<!--    <dependency>-->
+<!--    	<groupId>io.quarkus</groupId>-->
+<!--    	<artifactId>quarkus-flyway</artifactId>-->
+<!--	</dependency>-->
+	
+	<dependency>
+	    <groupId>org.projectlombok</groupId>
+	    <artifactId>lombok</artifactId>
+	    <version>${lombok.version}</version>
+	    <scope>provided</scope>
+	</dependency>
+	
+<!--	<dependency>-->
+<!--    	<groupId>org.flywaydb</groupId>-->
+<!--    	<artifactId>flyway-database-postgresql</artifactId>-->
+<!--    	<version>${flyway.database.postgresql.version}</version>-->
+<!--	</dependency>-->
+    
+    <dependency>
+    	<groupId>io.quarkus</groupId>
+    	<artifactId>quarkus-jdbc-h2</artifactId>
+<!--		<scope>test</scope>-->
+	</dependency>
+    
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5</artifactId>
@@ -87,6 +118,7 @@
           </execution>
         </executions>
       </plugin>
+      
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${compiler-plugin.version}</version>
@@ -94,8 +126,21 @@
           <compilerArgs>
             <arg>-parameters</arg>
           </compilerArgs>
+		  <annotationProcessorPaths>
+        	<path>
+          		<groupId>org.projectlombok</groupId>
+          		<artifactId>lombok</artifactId>
+          		<version>${lombok.version}</version>
+        	</path>
+        	<path>
+          		<groupId>io.quarkus</groupId>
+          		<artifactId>quarkus-extension-processor</artifactId>
+          		<version>${quarkus.extension.processor.version}</version>
+        	</path>
+      	  </annotationProcessorPaths>
         </configuration>
       </plugin>
+      
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${surefire-plugin.version}</version>
@@ -106,6 +151,7 @@
           </systemPropertyVariables>
         </configuration>
       </plugin>
+      
       <plugin>
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>${surefire-plugin.version}</version>

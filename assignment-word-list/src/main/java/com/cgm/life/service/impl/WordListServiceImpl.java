@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -43,6 +44,17 @@ public class WordListServiceImpl implements WordListService{
 				.map(Word::getWordValue)
 				.toList();
 		//@formatter:on
+	}
+
+
+
+	@Override
+	@Transactional
+	public Long saveWord(String wordValue, Boolean premium) {
+		Word wordToSave = Word.builder().wordValue(wordValue).premium(premium).build();
+		wordRepository.persist(wordToSave);
+		
+		return wordToSave.getId();
 	}
 
 }

@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import com.cgm.life.entity.Word;
 import com.cgm.life.service.WordListService;
 
 import io.quarkus.panache.common.Sort;
@@ -33,6 +34,11 @@ public class WordListServiceMockImpl implements WordListService {
 				.sorted(wordComparator)
 				.collect(toList());
 		//@formatter:on
+	}
+
+	@Override
+	public Long saveWord(String wordValue, Boolean premium) {
+		return null;
 	}
 
 }

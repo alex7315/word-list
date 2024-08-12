@@ -1,51 +1,38 @@
 package com.cgm.life.resource;
 
+import static com.cgm.life.testing.Constants.PASSWORD_PREMIUM;
+import static com.cgm.life.testing.Constants.PASSWORD_REGULAR;
+import static com.cgm.life.testing.Constants.RESPONSE_PATH_PREMIUM_PATH;
+import static com.cgm.life.testing.Constants.RESPONSE_PATH_REGULAR_ASC_PATH;
+import static com.cgm.life.testing.Constants.RESPONSE_PATH_REGULAR_DESC_PATH;
+import static com.cgm.life.testing.Constants.RESPONSE_PATH_REGULAR_PAGED_DESC_JSON;
+import static com.cgm.life.testing.Constants.RESPONSE_PATH_REGULAR_PAGED_JSON;
+import static com.cgm.life.testing.Constants.USER_PREMIUM;
+import static com.cgm.life.testing.Constants.USER_REGULAR;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.stringContainsInOrder;
-
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
+import com.cgm.life.testing.JsonResourceReader;
+import com.cgm.life.testing.ProfileProvider;
 
 import io.quarkus.panache.common.Sort;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.TestProfile;
 
 @QuarkusTest
 @TestHTTPEndpoint(WordsResource.class)
-class WordsResourceTest {
-
-	private static final String USER_REGULAR = "regular";
-	private static final String PASSWORD_REGULAR = "WordList_2024";
-
-	private static final String USER_PREMIUM = "premium";
-	private static final String PASSWORD_PREMIUM = "WordList_2024";
-
-	private static final String RESPONSE_PATH_REGULAR_PAGED_JSON = "/com/cgm/life/word-list-regular-paged-response.json";
-	private static final String RESPONSE_PATH_REGULAR_PAGED_DESC_JSON = "/com/cgm/life/word-list-regular-paged-response-desc.json";
-	private static final String RESPONSE_PATH_REGULAR_ASC_PATH = "/com/cgm/life/word-list-regular-response-asc.json";
-	private static final String RESPONSE_PATH_REGULAR_DESC_PATH = "/com/cgm/life/word-list-regular-response-desc.json";
-	private static final String RESPONSE_PATH_PREMIUM_PATH = "/com/cgm/life/word-list-premium-response-asc.json";
+@TestProfile(ProfileProvider.GetIntegrationTest.class)
+class WordResourceGetMethodIntegrationTest {
 
 	@Inject
-	private ObjectMapper objectMapper;
-
-	private List<String> readResource(String path) throws Exception {
-		CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, String.class);
-		return objectMapper.readValue(
-				new InputStreamReader(getClass().getResourceAsStream(path), Charset.forName("UTF-8")), listType);
-	}
+	private JsonResourceReader jsonResourceReader;
 
 	@Test
 	void shouldReturnWordsInDefaultSorting() throws Exception {
@@ -55,7 +42,7 @@ class WordsResourceTest {
 				.get()
 				.then()
 				.statusCode(Response.Status.OK.getStatusCode())
-				.body(is(stringContainsInOrder(readResource(RESPONSE_PATH_REGULAR_ASC_PATH))));
+				.body(is(stringContainsInOrder(jsonResourceReader.readResource(RESPONSE_PATH_REGULAR_ASC_PATH))));
 		//@formatter:on
 	}
 
@@ -68,7 +55,7 @@ class WordsResourceTest {
 				.get()
 				.then()
 				.statusCode(Response.Status.OK.getStatusCode())
-				.body(is(stringContainsInOrder(readResource(RESPONSE_PATH_REGULAR_DESC_PATH))));
+				.body(is(stringContainsInOrder(jsonResourceReader.readResource(RESPONSE_PATH_REGULAR_DESC_PATH))));
 		//@formatter:on
 	}
 
@@ -81,7 +68,7 @@ class WordsResourceTest {
 				.get()
 				.then()
 				.statusCode(Response.Status.OK.getStatusCode())
-				.body(is(stringContainsInOrder(readResource(RESPONSE_PATH_REGULAR_ASC_PATH))));
+				.body(is(stringContainsInOrder(jsonResourceReader.readResource(RESPONSE_PATH_REGULAR_ASC_PATH))));
 		//@formatter:on
 	}
 
@@ -95,7 +82,7 @@ class WordsResourceTest {
 				.get()
 				.then()
 				.statusCode(Response.Status.OK.getStatusCode())
-				.body(is(stringContainsInOrder(readResource(RESPONSE_PATH_REGULAR_PAGED_JSON))));
+				.body(is(stringContainsInOrder(jsonResourceReader.readResource(RESPONSE_PATH_REGULAR_PAGED_JSON))));
 		//@formatter:on
 	}
 
@@ -110,28 +97,7 @@ class WordsResourceTest {
 				.get()
 				.then()
 				.statusCode(Response.Status.OK.getStatusCode())
-				.body(is(stringContainsInOrder(readResource(RESPONSE_PATH_REGULAR_PAGED_DESC_JSON))));
-		//@formatter:on
-	}
-
-	@Test
-	void shouldCreateANewWord() {
-		//@formatter:off
-		given().auth().preemptive().basic(USER_REGULAR, PASSWORD_REGULAR)
-				.contentType("application/json")
-				.body("NewRegularValue")
-				.when()
-				.post()
-				.then()
-				.statusCode(Response.Status.CREATED.getStatusCode())
-				.header("Location", is(notNullValue()));
-
-		given().auth().preemptive().basic(USER_REGULAR, PASSWORD_REGULAR)
-				.when()
-				.get()
-				.then()
-				.statusCode(Response.Status.OK.getStatusCode())
-				.body(is(stringContainsInOrder("NewRegularValue")));
+				.body(is(stringContainsInOrder(jsonResourceReader.readResource(RESPONSE_PATH_REGULAR_PAGED_DESC_JSON))));
 		//@formatter:on
 	}
 
@@ -171,7 +137,7 @@ class WordsResourceTest {
 				.get()
 				.then()
 				.statusCode(Response.Status.OK.getStatusCode())
-				.body(is(stringContainsInOrder(readResource(RESPONSE_PATH_PREMIUM_PATH))));
+				.body(is(stringContainsInOrder(jsonResourceReader.readResource(RESPONSE_PATH_PREMIUM_PATH))));
 		//@formatter:on
 	}
 

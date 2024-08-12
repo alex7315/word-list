@@ -18,6 +18,15 @@
     
     <flyway.database.postgresql.version>10.17.0</flyway.database.postgresql.version>
     <lombok.version>1.18.34</lombok.version>
+    
+    <jacoco.plugin.version>0.8.12</jacoco.plugin.version>
+    
+    <!-- sonar properties -->
+	<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>  <!-- Ensure you run mvn install before sonar:sonar -->
+	<sonar.java.codeCoveragePlugin>jacoco</sonar.java.codeCoveragePlugin>
+	<sonar.surefire.reportsPath>/target/surefire-reports</sonar.surefire.reportsPath>
+	<sonar.jacoco.reportPath>target/jacoco.exec</sonar.jacoco.reportPath>    <!-- This is the default, put here to be explicit -->
+	<sonar.jacoco.itReportPath>target/jacoco-it.exec</sonar.jacoco.itReportPath>
   </properties>
   
   
@@ -148,6 +157,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${surefire-plugin.version}</version>
         <configuration>
+          <argLine>${surefireArgLine} -Xmx1024m -noverify</argLine>
           <systemPropertyVariables>
             <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
             <maven.home>${maven.home}</maven.home>
@@ -165,6 +175,10 @@
               <goal>verify</goal>
             </goals>
             <configuration>
+            	<useSystemClassLoader>false</useSystemClassLoader>
+				<reportFormat>plain</reportFormat>
+				<argLine>${surefireArgLine} -Xmx1024m -noverify</argLine>
+            
               <systemPropertyVariables>
                 <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
                 <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
@@ -174,6 +188,34 @@
           </execution>
         </executions>
       </plugin>
+      
+      <plugin> 
+ 		<groupId>org.jacoco</groupId> 
+ 		<artifactId>jacoco-maven-plugin</artifactId> 
+ 		<version>${jacoco.plugin.version}</version> 
+	
+ 		<executions> 
+ 			<execution> 
+ 				<goals> 
+ 					<goal>prepare-agent</goal> 
+ 				</goals> 
+ 				<configuration> 
+ 					<append>true</append> 
+ 					<destFile>${sonar.jacoco.reportPath}</destFile> 
+					 <!-- Sets the VM argument line used when unit tests are run. --> 
+ 					<propertyName>surefireArgLine</propertyName> 
+ 				</configuration> 
+ 			</execution> 
+ 			<execution> 
+ 				<id>report</id> 
+ 				<phase>prepare-package</phase> 
+ 				<goals> 
+ 					<goal>report</goal> 
+ 				</goals> 
+ 			</execution>
+ 		</executions> 
+ 	  </plugin> 
+      
     </plugins>
   </build>
   <profiles>

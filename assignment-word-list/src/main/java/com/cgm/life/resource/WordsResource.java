@@ -66,7 +66,7 @@ public class WordsResource {
 			if (securityContext.isUserInRole(ROLE_PREMIUM)) {
 				wordId = wordListService.saveWord(wordValue, premium);
 			} else {
-				return Response.status(Status.UNAUTHORIZED).build();
+				return Response.status(Status.FORBIDDEN).build();
 			}
 		} else {
 			wordId = wordListService.saveWord(wordValue, Boolean.FALSE);

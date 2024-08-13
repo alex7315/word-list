@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS word (
+			id BIGSERIAL PRIMARY KEY,
+			word_value VARCHAR(255) NOT NULL,
+			premium BOOLEAN NOT NULL DEFAULT FALSE);
+			
+CREATE TABLE IF NOT EXISTS premium_word (
+			id BIGSERIAL PRIMARY KEY,
+			word_value VARCHAR(255) NOT NULL,
+			sequence INTEGER NOT NULL,
+			language_code CHAR(8) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS word_user (
+			id BIGSERIAL PRIMARY KEY,
+			username VARCHAR(255) UNIQUE NOT NULL,
+			password VARCHAR(255),
+			role VARCHAR(255)
+);

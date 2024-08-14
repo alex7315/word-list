@@ -4,9 +4,10 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.flywaydb.core.Flyway;
 
 import io.quarkus.runtime.StartupEvent;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 
-@jakarta.enterprise.context.ApplicationScoped
+@ApplicationScoped
 public class FlywayRunner {
 
 	@ConfigProperty(name = "wordlist.flyway.migrate")

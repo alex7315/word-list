@@ -16,7 +16,7 @@
     <skipITs>true</skipITs>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
     
-    <flyway.database.postgresql.version>10.17.0</flyway.database.postgresql.version>
+    <flyway.database.postgresql.version>10.0.0</flyway.database.postgresql.version>
     <lombok.version>1.18.34</lombok.version>
     
     <jacoco.plugin.version>0.8.12</jacoco.plugin.version>
@@ -65,18 +65,19 @@
     
     <dependency>
     	<groupId>io.quarkus</groupId>
-    	<artifactId>quarkus-hibernate-orm-panache</artifactId>
-    </dependency>
-    
-    <dependency>
-    	<groupId>io.quarkus</groupId>
     	<artifactId>quarkus-smallrye-openapi</artifactId>
     </dependency>
     
-<!--    <dependency>-->
-<!--    	<groupId>io.quarkus</groupId>-->
-<!--    	<artifactId>quarkus-flyway</artifactId>-->
-<!--	</dependency>-->
+    <!--DB -->
+    <dependency>
+	    <groupId>io.quarkus</groupId>
+	    <artifactId>quarkus-jdbc-postgresql</artifactId>
+	</dependency>
+	
+	<dependency>
+    	<groupId>io.quarkus</groupId>
+    	<artifactId>quarkus-hibernate-orm-panache</artifactId>
+    </dependency>
 	
 	<dependency>
 	    <groupId>org.projectlombok</groupId>
@@ -85,22 +86,16 @@
 	    <scope>provided</scope>
 	</dependency>
 	
-<!--	<dependency>-->
-<!--    	<groupId>org.flywaydb</groupId>-->
-<!--    	<artifactId>flyway-database-postgresql</artifactId>-->
-<!--    	<version>${flyway.database.postgresql.version}</version>-->
-<!--	</dependency>-->
-    
-    <dependency>
-    	<groupId>io.quarkus</groupId>
-    	<artifactId>quarkus-jdbc-h2</artifactId>
-<!--		<scope>test</scope>-->
-	</dependency>
-    
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-security-jpa</artifactId>
     </dependency>
+    
+    <dependency>
+    	<groupId>io.quarkus</groupId>
+    	<artifactId>quarkus-jdbc-h2</artifactId>
+		<scope>test</scope>
+	</dependency>
     
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -157,7 +152,8 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${surefire-plugin.version}</version>
         <configuration>
-          <argLine>${surefireArgLine} -Xmx1024m -noverify</argLine>
+          <!-- Sets argument line property that is used by running of jacoco-maven-plugin. --> 
+          <argLine>${surefireArgLine} -Xmx1024m</argLine>
           <systemPropertyVariables>
             <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
             <maven.home>${maven.home}</maven.home>
@@ -175,9 +171,6 @@
               <goal>verify</goal>
             </goals>
             <configuration>
-            	<useSystemClassLoader>false</useSystemClassLoader>
-				<reportFormat>plain</reportFormat>
-				<argLine>${surefireArgLine} -Xmx1024m -noverify</argLine>
             
               <systemPropertyVariables>
                 <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>

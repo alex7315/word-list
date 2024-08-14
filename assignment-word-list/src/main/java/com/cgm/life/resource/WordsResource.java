@@ -40,20 +40,27 @@ public class WordsResource {
 	@GET
 	@RolesAllowed({ ROLE_REGULAR, ROLE_PREMIUM })
 	public Response getWords(@QueryParam("pageIndex") Integer pageIndex, @QueryParam("pageSize") Integer pageSize,
-			@QueryParam("sortDirection") Sort.Direction sortDirection,
-			@RestHeader("Content-Language") String languageCode, @Context SecurityContext securityContext) {
+			@QueryParam("sortDirection") Sort.Direction sortDirection) {
 
 		//@formatter:off
-		if(securityContext.isUserInRole(ROLE_PREMIUM)) {
-	        return Response
-	        		.ok(wordListService.getPremiumWords(pageIndex, pageSize, sortDirection, languageCode))
-	        		.build();
-		} else {
-			return Response
+		return Response
 	        		.ok(wordListService.getRegularWords(pageIndex, pageSize, sortDirection))
 	        		.build();
-		}
         //@formatter:on
+	}
+
+	@GET
+	@RolesAllowed({ ROLE_PREMIUM })
+	@Path("/premium")
+	public Response getPremiumWords(@QueryParam("pageIndex") Integer pageIndex,
+			@QueryParam("pageSize") Integer pageSize, @QueryParam("sortDirection") Sort.Direction sortDirection,
+			@RestHeader("Content-Language") String languageCode) {
+
+		//@formatter:off
+		return Response
+        		.ok(wordListService.getPremiumWords(pageIndex, pageSize, sortDirection, languageCode))
+        		.build();
+		//@formatter:on
 	}
 
 	@POST

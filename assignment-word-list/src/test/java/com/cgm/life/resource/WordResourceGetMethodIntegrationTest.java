@@ -2,9 +2,10 @@ package com.cgm.life.resource;
 
 import static com.cgm.life.testing.Constants.PASSWORD_PREMIUM;
 import static com.cgm.life.testing.Constants.PASSWORD_REGULAR;
-import static com.cgm.life.testing.Constants.RESPONSE_PATH_PREMIUM_PATH;
-import static com.cgm.life.testing.Constants.RESPONSE_PATH_REGULAR_ASC_PATH;
-import static com.cgm.life.testing.Constants.RESPONSE_PATH_REGULAR_DESC_PATH;
+import static com.cgm.life.testing.Constants.RESPONSE_PATH_PREMIUM_JSON;
+import static com.cgm.life.testing.Constants.RESPONSE_PATH_PREMIUM_PAGED_DESC_JSON;
+import static com.cgm.life.testing.Constants.RESPONSE_PATH_REGULAR_ASC_JSON;
+import static com.cgm.life.testing.Constants.RESPONSE_PATH_REGULAR_DESC_JSON;
 import static com.cgm.life.testing.Constants.RESPONSE_PATH_REGULAR_PAGED_DESC_JSON;
 import static com.cgm.life.testing.Constants.RESPONSE_PATH_REGULAR_PAGED_JSON;
 import static com.cgm.life.testing.Constants.USER_PREMIUM;
@@ -42,7 +43,7 @@ class WordResourceGetMethodIntegrationTest {
 				.get()
 				.then()
 				.statusCode(Response.Status.OK.getStatusCode())
-				.body(is(stringContainsInOrder(jsonResourceReader.readResource(RESPONSE_PATH_REGULAR_ASC_PATH))));
+				.body(is(stringContainsInOrder(jsonResourceReader.readResource(RESPONSE_PATH_REGULAR_ASC_JSON))));
 		//@formatter:on
 	}
 
@@ -55,7 +56,7 @@ class WordResourceGetMethodIntegrationTest {
 				.get()
 				.then()
 				.statusCode(Response.Status.OK.getStatusCode())
-				.body(is(stringContainsInOrder(jsonResourceReader.readResource(RESPONSE_PATH_REGULAR_DESC_PATH))));
+				.body(is(stringContainsInOrder(jsonResourceReader.readResource(RESPONSE_PATH_REGULAR_DESC_JSON))));
 		//@formatter:on
 	}
 
@@ -68,7 +69,7 @@ class WordResourceGetMethodIntegrationTest {
 				.get()
 				.then()
 				.statusCode(Response.Status.OK.getStatusCode())
-				.body(is(stringContainsInOrder(jsonResourceReader.readResource(RESPONSE_PATH_REGULAR_ASC_PATH))));
+				.body(is(stringContainsInOrder(jsonResourceReader.readResource(RESPONSE_PATH_REGULAR_ASC_JSON))));
 		//@formatter:on
 	}
 
@@ -130,14 +131,40 @@ class WordResourceGetMethodIntegrationTest {
 	}
 
 	@Test
-	void shouldReturnPremiumWordsByPremiumUserAuthorized() throws Exception {
+	void shouldReturnASortedPageOfPremiumWordList() throws Exception {
+		//@formatter:off
+		given().auth().preemptive().basic(USER_PREMIUM, PASSWORD_PREMIUM)
+				.queryParam("pageIndex", 0)
+				.queryParam("pageSize", 5)
+				.queryParam("sortDirection", Sort.Direction.Descending)
+				.when()
+				.get("/premium")
+				.then()
+				.statusCode(Response.Status.OK.getStatusCode())
+				.body(is(stringContainsInOrder(jsonResourceReader.readResource(RESPONSE_PATH_PREMIUM_PAGED_DESC_JSON))));
+		//@formatter:on
+	}
+
+	@Test
+	void shouldAllowBigWordsUserToAccessToPremiumWordList() throws Exception {
 		//@formatter:off
 		given().auth().preemptive().basic(USER_PREMIUM, PASSWORD_PREMIUM)
 				.when()
-				.get()
+				.get("/premium")
 				.then()
 				.statusCode(Response.Status.OK.getStatusCode())
-				.body(is(stringContainsInOrder(jsonResourceReader.readResource(RESPONSE_PATH_PREMIUM_PATH))));
+				.body(is(stringContainsInOrder(jsonResourceReader.readResource(RESPONSE_PATH_PREMIUM_JSON))));
+		//@formatter:on
+	}
+
+	@Test
+	void shouldNotAllowEndUserToAccessToPremiumWordList() {
+		//@formatter:off
+		given().auth().preemptive().basic(USER_REGULAR, PASSWORD_REGULAR)
+				.when()
+				.get("/premium")
+				.then()
+				.statusCode(Response.Status.FORBIDDEN.getStatusCode());
 		//@formatter:on
 	}
 

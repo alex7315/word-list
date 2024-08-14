@@ -59,19 +59,19 @@ class WordResourcePostMethodIntegrationTest {
 			.statusCode(Response.Status.CREATED.getStatusCode())
 			.header("Location", is(notNullValue()));
 		
-		given().auth().preemptive().basic(USER_PREMIUM, PASSWORD_REGULAR)
+		given().auth().preemptive().basic(USER_PREMIUM, PASSWORD_PREMIUM)
 			.when()
-			.get()
+			.get("/premium")
 			.then()
 			.statusCode(Response.Status.OK.getStatusCode())
 			.body(is(stringContainsInOrder("NewPremiumWord1")));
 		
-		given().auth().preemptive().basic(USER_REGULAR, PASSWORD_REGULAR)
+		given().auth().preemptive().basic(USER_PREMIUM, PASSWORD_PREMIUM)
 			.when()
 			.get()
 			.then()
 			.statusCode(Response.Status.OK.getStatusCode())
-			.body(is(not(stringContainsInOrder("NewPremiumWord"))));			
+			.body(is(not(stringContainsInOrder("NewPremiumWord1"))));			
 		//@formatter:on
 	}
 

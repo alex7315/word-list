@@ -153,6 +153,10 @@
           		<version>${quarkus.extension.processor.version}</version>
         	</path>
       	  </annotationProcessorPaths>
+      	  <compilerArgs>
+          	<arg>-sourcepath</arg>
+            <arg>${project.basedir}/src/main/java${path.separator}${project.basedir}/target/generated-sources/annotations${path.separator}/</arg>
+          </compilerArgs>
         </configuration>
       </plugin>
       

@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS premium_word (
 			id BIGSERIAL PRIMARY KEY,
 			word_value VARCHAR(255) NOT NULL,
 			sequence INTEGER NOT NULL,
-			language_code CHAR(8) NOT NULL
+			language_code VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS word_user (

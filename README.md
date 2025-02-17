@@ -1,2 +1,2 @@
 # word-list
-CGM test project
+Quarkus test project

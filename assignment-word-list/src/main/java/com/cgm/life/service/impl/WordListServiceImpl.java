@@ -28,6 +28,8 @@ public class WordListServiceImpl implements WordListService {
 	@ConfigProperty(name = "com.cgm.life.language.code.default")
 	private String languageCodeDefault;
 
+	private Boolean premiumDefault = false;
+
 	private WordRepository wordRepository;
 
 	private PremiumWordRepository premiumWordRepository;
@@ -84,7 +86,8 @@ public class WordListServiceImpl implements WordListService {
 	@Override
 	@Transactional
 	public Long saveWord(String wordValue, Boolean premium) {
-		Word wordToSave = Word.builder().wordValue(wordValue).premium(premium).build();
+		Word wordToSave = Word.builder().wordValue(wordValue).premium(premium == null ? premiumDefault : premium)
+				.build();
 		wordRepository.persist(wordToSave);
 
 		return wordToSave.getId();

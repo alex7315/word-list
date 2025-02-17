@@ -67,17 +67,23 @@ public class WordsResource {
 	@RolesAllowed({ ROLE_REGULAR, ROLE_PREMIUM })
 	public Response createWord(String wordValue, @QueryParam("premium") Boolean premium,
 			@Context SecurityContext securityContext) {
-
-		Long wordId;
-		if (Boolean.TRUE.equals(premium)) {
-			if (securityContext.isUserInRole(ROLE_PREMIUM)) {
-				wordId = wordListService.saveWord(wordValue, premium);
-			} else {
-				return Response.status(Status.FORBIDDEN).build();
-			}
+		if (securityContext.isUserInRole(ROLE_PREMIUM)) {
+			return createWordCommon(wordValue);
 		} else {
-			wordId = wordListService.saveWord(wordValue, Boolean.FALSE);
+			return createWordByReglarUser(wordValue, premium);
 		}
+	}
+
+	private Response createWordByReglarUser(String wordValue, Boolean premium) {
+		if (Boolean.TRUE.equals(premium)) {
+			return Response.status(Status.FORBIDDEN).build();
+		} else {
+			return createWordCommon(wordValue);
+		}
+	}
+
+	private Response createWordCommon(String wordValue) {
+		var wordId = wordListService.saveWord(wordValue, Boolean.FALSE);
 
 		//@formatter:off
 		return Response

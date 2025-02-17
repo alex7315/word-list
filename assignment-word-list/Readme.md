@@ -1,18 +1,5 @@
 # Word List
 
----
-**NOTE**
-
-This project is meant as an assignment for potential new hires of cgm LIFE.
----
-
-## Preface
-In this assignment we will assess your abilities with quarkus and kubernetes. You will be tasked with a imaginary 
-scenario to perform various development tasks for the imaginary "Word List" product.
-
-The first part will be some programming tasks for quarkus while the second part consists of kubernetes related 
-topics.
-
 ## Quarkus
 
 Our recently launched product "Word List" has had some success with consumers. The product is a word database
@@ -34,18 +21,7 @@ can be used to insert new words.
 access control. The login will be handled by Big Words, our api should just allow the Roles "endUser" and "bigWords".
 4. Big Words would like to provide a premium word list for their customers, that can only be accessed and updated for
 users with the "bigWords" role. Initially the premium word list should consist of the words "this", "is" and "premium".
-5. The developers of Big Words mentioned that our api is currently not well documented, Big Words suggested that we 
-should describe our api with OpenAPI Annotations.
+5. Big Words suggested that we should describe our api with OpenAPI Annotations.
 6. We estimate that due to the larger pool of words, an in memory store for the wordlist might not be enough. Please 
 come up with a solution that loads the words from a PostgreSQL database. Provide us with the necessary Entities. We 
 would prefer that the database is initialized with the quarkus flyway module.
-7. Please make sure your code is working correctly by providing tests for the new code.
-
-## Kubernetes
-
-Congratulations!!! Big words agreed to our contract and our customer base is rising. We project that by the end of the 
-quarter, our customers will tripple.  
-
-In order to satisfy the increased demand for our service, we need to scale the service up. Currently, it is running in a 
-single pod. Your task is to adapt the kubernetes files so that instead of using a single pod, we can scale the service 
-to 3 pods using a singular deployment configuration file.

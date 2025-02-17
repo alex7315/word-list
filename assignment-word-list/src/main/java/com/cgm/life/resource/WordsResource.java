@@ -68,7 +68,7 @@ public class WordsResource {
 	public Response createWord(String wordValue, @QueryParam("premium") Boolean premium,
 			@Context SecurityContext securityContext) {
 		if (securityContext.isUserInRole(ROLE_PREMIUM)) {
-			return createWordCommon(wordValue);
+			return createWordCommon(wordValue, premium);
 		} else {
 			return createWordByReglarUser(wordValue, premium);
 		}
@@ -78,12 +78,12 @@ public class WordsResource {
 		if (Boolean.TRUE.equals(premium)) {
 			return Response.status(Status.FORBIDDEN).build();
 		} else {
-			return createWordCommon(wordValue);
+			return createWordCommon(wordValue, Boolean.FALSE);
 		}
 	}
 
-	private Response createWordCommon(String wordValue) {
-		var wordId = wordListService.saveWord(wordValue, Boolean.FALSE);
+	private Response createWordCommon(String wordValue, Boolean premium) {
+		var wordId = wordListService.saveWord(wordValue, premium);
 
 		//@formatter:off
 		return Response
